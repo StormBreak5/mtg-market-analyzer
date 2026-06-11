@@ -16,12 +16,14 @@ def processar_silver():
     for _, row in df_bronze.iterrows():
         dado = row['payload']
         if dado.get('object') == 'card':
+            precos = dado.get('prices', {})
+
             cartas.append({
                 'id_scryfall': dado.get('id'),
                 'nome': dado.get('name'),
                 'identidade_cor': ",".join(dado.get('color_identity', [])),
                 'raridade': dado.get('rarity'),
-                'preco_usd': float(dado.get('prices', {}).get('usd') or 0.0),
+                'preco_usd': float(precos.get('usd') or precos.get('usd_foil') or 0.0),
             })
     
     df_silver = pd.DataFrame(cartas)
